@@ -2,7 +2,8 @@ import { initializeApp } from "firebase/app";
 import {
   getFirestore, collection, getDocs, onSnapshot,
   addDoc, deleteDoc, doc,
-  query, where
+  query, where,
+  orderBy, serverTimestamp
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -24,7 +25,8 @@ const db = getFirestore()
 const collectionRef = collection(db, "books")
 
 // queries
-const q = query(collectionRef, where("author", "==", "patrick rothfuss"))
+const q = query(collectionRef, orderBy("createdAt"))
+    // where("author", "==", "patrick rothfuss"),
 
 // get collection data
 // getDocs(collectionRef)
@@ -68,6 +70,7 @@ addBookForm.addEventListener("submit", (e) => {
   addDoc(collectionRef, {
     title: addBookForm.title.value,
     author: addBookForm.author.value,
+    createdAt: serverTimestamp(),
   })
   .then(() => {
     addBookForm.reset()
